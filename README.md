@@ -1,4 +1,21 @@
 # huffman-encoding-decoding
 Data encoding and decoding using the Huffman code
 
-Work in progress...
+
+# MAKE OPTIONS
+1. To make both encoder and decoder, execute
+```bash
+make all
+```
+2. To make only decoder, execute
+```bash
+make decode
+```
+3. To make only encoder, execute
+```bash
+make encode
+```
+4. To remove executables, execute
+```bash
+make clean
+```
