@@ -17,14 +17,10 @@ NODE* createHuffmanTree(NODE*);
 int getHuffmanTreeRoot()
 {
     int fd;
-    char fname[50];
     NODE* freqlist_head = NULL;
     NODE* sortedlist_head = NULL;
     
-    printf("Enter name of file in directory to read and initialise Huffman tree: ");
-    scanf("%s", fname);
-    
-    fd = open(fname, O_RDONLY);
+    fd = open("samp_ptext.txt", O_RDONLY);
 
     freqlist_head = freqlist(fd, NULL);
     close(fd);
