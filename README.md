@@ -19,3 +19,6 @@ make encode
 ```bash
 make clean
 ```
+
+# UPDATES
+Huffman encoder and decoder soon to be added
