@@ -21,4 +21,4 @@ make clean
 ```
 
 # UPDATES
-Huffman encoder and decoder soon to be added
+Huffman encoder and decoder files soon to be added
