@@ -20,7 +20,7 @@ int getHuffmanTreeRoot()
     NODE* freqlist_head = NULL;
     NODE* sortedlist_head = NULL;
     
-    fd = open("samp_ptext.txt", O_RDONLY);
+    fd = open("charset.txt", O_RDONLY);
 
     freqlist_head = freqlist(fd, NULL);
     close(fd);
