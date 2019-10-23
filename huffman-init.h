@@ -9,30 +9,10 @@
 char buf[1];
 NODE* huffmantree_root = NULL;
 
-int getHuffmanTreeRoot();
 NODE* freqlist(int, NODE*);
 NODE* sortlist(NODE*);
 NODE* createHuffmanTree(NODE*);
-
-int getHuffmanTreeRoot()
-{
-    int fd;
-    NODE* freqlist_head = NULL;
-    NODE* sortedlist_head = NULL;
-    
-    fd = open("charset.txt", O_RDONLY);
-
-    freqlist_head = freqlist(fd, NULL);
-    close(fd);
-
-    sortedlist_head = sortlist(freqlist_head);
-    clearList(&freqlist_head);
-    
-    huffmantree_root = createHuffmanTree(sortedlist_head);
-    clearList(&sortedlist_head);
-    
-    return 0;
-}
+int getHuffmanTreeRoot();
 
 /*
 @brief Creates frequency list of all characters in the file
@@ -40,7 +20,8 @@ int getHuffmanTreeRoot()
 @param __second First node of frequency list
 @return First node of frequency list
 
-Only creates an unsorted list of characters and their respective frequencies. Spaces are ignored (feature can be changed).
+Only creates an unsorted list of characters and their respective frequencies.
+Spaces are ignored, as are newlines, tab spaces and carriage returns (features can be changed).
 */
 NODE* freqlist(int fd, NODE* head)
 {
@@ -106,7 +87,6 @@ NODE* sortlist(NODE* head)
 {
     NODE* temp_freqlist = head;
     NODE* sort_head = NULL;
-    int i = 0;
     while(temp_freqlist != NULL)
     {
         sort_head = insertNode(sort_head, temp_freqlist);
@@ -152,4 +132,32 @@ NODE* createHuffmanTree(NODE* head)
     }
     
     return root;
+}
+
+/*
+@brief Gets root node of Huffman tree created
+@params None
+@return 0 on successful execution
+
+Using other functions defined above, stores root of Huffman tree in huffmantree_root. 
+This node, being globally declared, is now available to all files which include this header.
+*/
+int getHuffmanTreeRoot()
+{
+    int fd;
+    NODE* freqlist_head = NULL;
+    NODE* sortedlist_head = NULL;
+    
+    fd = open("charset.txt", O_RDONLY);
+
+    freqlist_head = freqlist(fd, NULL);
+    close(fd);
+
+    sortedlist_head = sortlist(freqlist_head);
+    clearList(&freqlist_head);
+    
+    huffmantree_root = createHuffmanTree(sortedlist_head);
+    clearList(&sortedlist_head);
+    
+    return 0;
 }
