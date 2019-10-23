@@ -10,12 +10,14 @@ typedef struct node
 NODE* createNode(char, int);       
 NODE* insertNode(NODE*, NODE*);    
 NODE* createSubtree(NODE*);
+void clearList(NODE**);
 
 /*
 @brief Creates node to add to list of nodes available and tree/heap
 @param __first Character to be encoded/decoded
 @param __second Frequency of __first
 @return New node created 
+lakjdfa;dslk
 
 Creates a fresh node and initialises the data to the values of that of the parameters provided.
 All pointers are initialised to NULL.
@@ -42,12 +44,16 @@ NODE* createNode(char ch, int f)
 
 Inserts a node in the sorted list, used to construct Huffman Tree.
 */
-NODE* insertNode(NODE* head, NODE* toIns)
+NODE* insertNode(NODE* head, NODE* ins)
 {
-    if(toIns == NULL)
+    if(ins == NULL)
     {
         return NULL;
     }
+    
+    NODE* toIns = createNode(ins->c, ins->freq);
+    toIns->left = ins->left;
+    toIns->right = ins->right;
     
     if(head == NULL)
     {
@@ -108,11 +114,33 @@ NODE* createSubtree(NODE* head)
         return NULL;
     }
     
-    NODE* intNode = createNode('\0', head->freq + head->next->freq);
+    NODE* intNode = createNode('-', head->freq + head->next->freq);
     intNode->left = head;
     intNode->right = head->next;
     
     head = insertNode(head, intNode);
     
     return intNode;
+}
+
+/*
+@brief Clears list
+@param Address of first pointer of list
+@return Nothing
+
+Clears list iteratively by freeing up consecutive nodes from the start of the list
+*/
+void clearList(NODE** head_ref)
+{
+    NODE* current = *head_ref;
+    NODE* next;
+    
+    while(current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    
+    *head_ref = NULL;
 }
