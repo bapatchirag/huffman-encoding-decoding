@@ -17,7 +17,6 @@ void clearList(NODE**);
 @param __first Character to be encoded/decoded
 @param __second Frequency of __first
 @return New node created 
-lakjdfa;dslk
 
 Creates a fresh node and initialises the data to the values of that of the parameters provided.
 All pointers are initialised to NULL.
@@ -111,14 +110,13 @@ NODE* createSubtree(NODE* head)
 {
     if(head == NULL || head->next == NULL)
     {
-        return NULL;
+    	return NULL;
     }
     
     NODE* intNode = createNode('-', head->freq + head->next->freq);
     intNode->left = head;
     intNode->right = head->next;
-    
-    head = insertNode(head, intNode);
+    //head = insertNode(head, intNode);
     
     return intNode;
 }
