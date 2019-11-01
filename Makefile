@@ -1,14 +1,14 @@
 all:
-	cc decode.c -o decode
-	cc encode.c -o encode
+	gcc decode.c -o decode
+	gcc encode.c -o encode
 	
 decode:
 	echo > ptext
-	cc decode.c -o decode
+	gcc decode.c -o decode
 
 encode:
 	echo > etext
-	cc encode.c -o encode
+	gcc encode.c -o encode
 	
 clean:
 	rm encode decode
