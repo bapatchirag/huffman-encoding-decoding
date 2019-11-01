@@ -7,12 +7,32 @@
 #include "helper.h"
 
 char buf[1];
-NODE* huffmantree_root = NULL;
 
+NODE* getHuffmanTreeRoot();
 NODE* freqlist(int, NODE*);
 NODE* sortlist(NODE*);
 NODE* createHuffmanTree(NODE*);
-int getHuffmanTreeRoot();
+
+NODE* getHuffmanTreeRoot()
+{
+    int fd;
+    NODE* freqlist_head = NULL;
+    NODE* sortedlist_head = NULL;
+    NODE* huffmantree_root = NULL;
+    
+    fd = open("charset.txt", O_RDONLY);
+
+    freqlist_head = freqlist(fd, NULL);
+    close(fd);
+
+    sortedlist_head = sortlist(freqlist_head);
+    clearList(&freqlist_head);
+    
+    huffmantree_root = createHuffmanTree(sortedlist_head);
+    //clearList(&sortedlist_head);
+    
+    return huffmantree_root;
+}
 
 /*
 @brief Creates frequency list of all characters in the file
@@ -20,8 +40,7 @@ int getHuffmanTreeRoot();
 @param __second First node of frequency list
 @return First node of frequency list
 
-Only creates an unsorted list of characters and their respective frequencies.
-Spaces are ignored, as are newlines, tab spaces and carriage returns (features can be changed).
+Only creates an unsorted list of characters and their respective frequencies. Spaces are ignored (feature can be changed).
 */
 NODE* freqlist(int fd, NODE* head)
 {
@@ -87,6 +106,7 @@ NODE* sortlist(NODE* head)
 {
     NODE* temp_freqlist = head;
     NODE* sort_head = NULL;
+    int i = 0;
     while(temp_freqlist != NULL)
     {
         sort_head = insertNode(sort_head, temp_freqlist);
@@ -105,59 +125,30 @@ The tree is created via a bottom-up, max-heap approach (tree is actually a max-h
 */
 NODE* createHuffmanTree(NODE* head)
 {
-    NODE* temp_sortlist = head;
-    NODE* temp_root;
+    NODE* temp_sorted = head;
     NODE* root = NULL;
+    NODE* temp_root = NULL;
     
-    while(temp_sortlist != NULL || temp_sortlist->next != NULL)
+    while(temp_sorted != NULL)
     {
-        temp_root = createSubtree(temp_sortlist);
-        if(temp_root != NULL)
-        {   
-            root = temp_root;
-        }
-        else
-        {
-            return root;
-        }
-        
-        if(temp_sortlist->next != NULL)
-        {
-            temp_sortlist = temp_sortlist->next->next;
-        }
-        else
-        {
-            temp_sortlist = temp_sortlist->next;
-        }
+    	temp_root = createSubtree(temp_sorted);
+    	if(temp_root == NULL)
+    	{
+    		return root;
+    	}
+    	root = temp_root;
+    	
+    	head = insertNode(head, root);
+    	
+    	if(temp_sorted->next != NULL)
+    	{
+    		temp_sorted = temp_sorted->next->next;
+    	}
+    	else
+    	{
+    		temp_sorted = NULL;
+    	}
     }
     
     return root;
-}
-
-/*
-@brief Gets root node of Huffman tree created
-@params None
-@return 0 on successful execution
-
-Using other functions defined above, stores root of Huffman tree in huffmantree_root. 
-This node, being globally declared, is now available to all files which include this header.
-*/
-int getHuffmanTreeRoot()
-{
-    int fd;
-    NODE* freqlist_head = NULL;
-    NODE* sortedlist_head = NULL;
-    
-    fd = open("charset.txt", O_RDONLY);
-
-    freqlist_head = freqlist(fd, NULL);
-    close(fd);
-
-    sortedlist_head = sortlist(freqlist_head);
-    clearList(&freqlist_head);
-    
-    huffmantree_root = createHuffmanTree(sortedlist_head);
-    clearList(&sortedlist_head);
-    
-    return 0;
 }
