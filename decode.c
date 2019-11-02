@@ -57,7 +57,7 @@ int main()
     		{
     			continue;
     		}
-    	}
+		}
     }
     while(rbuf[0] != '\n');
     
