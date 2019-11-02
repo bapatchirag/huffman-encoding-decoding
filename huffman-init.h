@@ -7,6 +7,9 @@
 #include "helper.h"
 
 char buf[1];
+NODE* freqlist_head = NULL;
+NODE* sortedlist_head = NULL;
+NODE* htree_root = NULL;
 
 NODE* getHuffmanTreeRoot();
 NODE* freqlist(int, NODE*);
@@ -16,10 +19,7 @@ NODE* createHuffmanTree(NODE*);
 NODE* getHuffmanTreeRoot()
 {
     int fd;
-    NODE* freqlist_head = NULL;
-    NODE* sortedlist_head = NULL;
-    NODE* huffmantree_root = NULL;
-    
+        
     fd = open("charset", O_RDONLY);
 
     freqlist_head = freqlist(fd, NULL);
@@ -28,10 +28,9 @@ NODE* getHuffmanTreeRoot()
     sortedlist_head = sortlist(freqlist_head);
     clearList(&freqlist_head);
     
-    huffmantree_root = createHuffmanTree(sortedlist_head);
-    //clearList(&sortedlist_head);
+    htree_root = createHuffmanTree(sortedlist_head);
     
-    return huffmantree_root;
+    return htree_root;
 }
 
 /*
