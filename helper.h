@@ -7,9 +7,17 @@ typedef struct node
     struct node* next;
 } NODE;
 
+NODE* toRet = NULL; // For preorder traversal
+
 NODE* createNode(char, int);       
 NODE* insertNode(NODE*, NODE*);    
 NODE* createSubtree(NODE*);
+NODE* copyNodeData(NODE*);
+NODE* pushNode(NODE*, NODE*);
+NODE* popNode(NODE*);
+void preorder(NODE*);
+NODE* preorderWrap(NODE*);
+NODE* routeList(NODE*, char);
 void clearList(NODE**);
 
 /*
@@ -119,6 +127,144 @@ NODE* createSubtree(NODE* head)
     //head = insertNode(head, intNode);
     
     return intNode;
+}
+
+/*
+@brief Copies node data
+@param Node to be copied
+@return New node
+
+Creates a new node, copies data from given node and returns the new new node.
+No copying of pointers takes place, only data is copied.
+*/
+NODE* copyNodeData(NODE* src)
+{
+	NODE* dest = createNode(src->c, src->freq);	
+	return dest;
+}
+
+/*
+@brief Inserts node at end of list
+@param __first First node of list
+@param __second Node to be inserted
+@return First node of list
+
+Inserts a node at the end of the list, whose first node is provided. Basically, like a push operation on a stack.
+*/
+NODE* pushNode(NODE* head, NODE* toPush)
+{
+	if(head == NULL)
+	{
+		return toPush;
+	}
+	
+	NODE* temp = head;
+	while(temp->next != NULL)
+	{
+		temp = temp->next;
+	}
+	
+	temp->next = toPush;
+	return head;
+}
+
+/*
+@brief Deletes node from end of list
+@param First node of list
+@return First node of list
+
+Deletes a node from the end of the list, whose first node is provided. Basically, like a pop operation on a stack.
+*/
+NODE* popNode(NODE* head)
+{
+	NODE* temp = head;
+	while(temp->next->next != NULL)
+	{
+		temp = temp->next;
+	}
+	
+	free(temp->next);
+	temp->next = NULL;
+	
+	return head;
+}
+
+/*
+@brief Performs preorder traversal of tree
+@param Root node of tree
+@return Nothing
+
+Recursiely traverses the tree whose root is given, in a preorder manner.
+Every node is added to a list, which can be accessed from outside the function.
+*/
+void preorder(NODE* root)
+{
+	if(root == NULL)
+	{
+		return;
+	}
+	
+	toRet = pushNode(toRet, copyNodeData(root));
+	preorder(root->left);
+	preorder(root->right);	
+}
+
+/*
+@brief Wrapper for preorder()
+@param Root node of tree
+@return First node of preordered list
+
+Calls the preorder() function; returns the first node of the preordered list which is compiled in the preorder function itself.
+*/
+NODE* preorderWrap(NODE* root)
+{
+	preorder(root);
+	return toRet;
+}
+
+/*
+@brief Creates a route to any leaf
+@param __first First node of preorder list
+@param __second Character for which route needs to be found
+@return First node of route
+
+Traversing the preordered list, the route for the character is calculated from the root of the tree.
+Each node in the route is added at the end of a list, and at the end, the first node of that list is returned.
+*/
+NODE* routeList(NODE* head, char need)
+{
+	int cons_ctr = 0;
+	NODE* temp = head;
+	NODE* route = NULL;
+	
+	while(temp != NULL)
+	{
+		if(temp->c == '-')
+		{
+			cons_ctr = 0;
+			route = pushNode(route, copyNodeData(temp));
+		}
+		else
+		{
+			if(temp->c == need)
+			{
+				route = pushNode(route, copyNodeData(temp));
+				break;
+			}
+			else
+			{
+				cons_ctr++;
+				if(cons_ctr >= 2)
+				{
+					route = popNode(route);
+				}
+			}
+		}
+		
+		temp = temp->next;
+	}
+	
+	return route;
 }
 
 /*
