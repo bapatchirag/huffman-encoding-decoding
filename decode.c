@@ -26,12 +26,10 @@ int main()
     	{
     		if(rbuf[0] == '\n')   		
     		{
-    			wbuf[0] = temp->c;
-    			write(fd_decoded, wbuf, 1);
     			wbuf[0] = '\n';
     			write(fd_decoded, wbuf, 1);
     			break;
-    		}    		
+    		}   
     		if(temp->left != NULL && temp->right != NULL)
     		{
 				if(rbuf[0] == '0')
@@ -54,14 +52,23 @@ int main()
 			wbuf[0] = temp->c;
 			write(fd_decoded, wbuf, 1); 
 			temp = huffmantree_root;
+			
+			if(rbuf[0] == '.')
+    		{
+    			continue;
+    		}
     	}
     }
     while(rbuf[0] != '\n');
     
+    // Delete the Huffman tree and the sorted frequency list from memory
+    clearList(&htree_root);
+    clearList(&sortedlist_head);
+    
 	close(fd_encoded);
 	close(fd_decoded);
 	
-	printf("Written to ptext.txt\n");
+	printf("Written to ptext\n");
 	    
     return 0;
 }
